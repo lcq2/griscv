@@ -1,0 +1,84 @@
+@ifdef RV64
+@define XLEN 8
+@else
+@define XLEN 4
+@endif #RV64
+
+define endian=little;
+
+define alignment=2;
+
+define space ram type=ram_space size=$(XLEN) default;
+define space register type=register_space size=4;
+
+# RISC-V Integer registers
+define register offset=0 size=$(XLEN) [
+	zero ra sp gp tp
+	t0 t1 t2
+	s0 s1
+	a0 a1 a2 a3
+	a4 a5 a6 a7
+	s2 s3 s4 s5 s6
+	s7 s8 s9 s10 s11
+	t3 t4 t5 t6
+	pc
+];
+
+define token instr(32)
+	opcode=(0,6)
+	rd=(7,11)
+	funct3=(12,14)
+	funct7=(25,31)
+	funct12=(20,31)
+	rs1=(15,19)
+	rs2=(20,24)
+	shamt=(20,24)
+	imm11_0=(20,31) signed dec
+	imm11_5=(25,31) signed dec
+	imm4_0=(7,11) dec
+	imm31_12=(12,31)
+	bimm11=(7,7)
+	bimm4_1=(8,11)
+	bimm10_5=(25,30)
+	bimm12=(31,31) signed
+	jimm19_12=(12,19)
+	jimm11=(20,20)
+	jimm10_1=(21,30)
+	jimm20=(31,31) signed
+	funct2=(25,26)
+	rs3=(27,31)
+;
+
+attach variables [ rd rs1 rs2 rs3 ] [
+	zero ra sp gp tp
+	t0 t1 t2
+	s0 s1
+	a0 a1 a2 a3
+	a4 a5 a6 a7
+	s2 s3 s4 s5 s6
+	s7 s8 s9 s10 s11
+	t3 t4 t5 t6
+];
+
+define pcodeop ecall;
+define pcodeop ebreak;
+
+# Immediate encodings
+IImm: ""^imm11_0 is imm11_0 { export *[const]:$(XLEN) imm11_0; }
+SImm: ""^computed is imm4_0 & imm11_5 [ computed = (imm11_5 << 5) | imm4_0; ] { export *[const]:$(XLEN) computed; }
+UImm: "#"^computed is imm31_12 [ computed = imm31_12 << 12; ] { export *[const]:$(XLEN) computed; }
+
+JRel: reloc is jimm20 & jimm10_1 & jimm11 & jimm19_12
+[ reloc = inst_start + ((jimm10_1 << 1) | (jimm11 << 11) | (jimm19_12 << 12) | (jimm20 << 20)); ] 
+{
+	export *:$(XLEN) reloc;
+}
+
+BRel: reloc is bimm12 & bimm10_5 & bimm4_1 & bimm11
+[ reloc = inst_start + ((bimm12 << 12) | (bimm10_5 << 5) | (bimm4_1 << 1) | (bimm11 << 11)); ]
+{
+	export *:$(XLEN) reloc;
+}
+
+@include "RV32I.sinc"
+@include "RV32M.sinc"

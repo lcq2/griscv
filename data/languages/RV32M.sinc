@@ -1,0 +1,35 @@
+:mul rd, rs1, rs2 is opcode=0b0110011 & funct7=1 & funct3=0b000 & rd & rs1 & rs2 {
+	local tmp:8 = sext(rs1)*sext(rs2);
+	rd = tmp:4;
+}
+
+:mulh rd, rs1, rs2 is opcode=0b0110011 & funct7=1 & funct3=0b001 & rd & rs1 & rs2 {
+	local tmp:8 = sext(rs1)*sext(rs2);
+	rd = tmp(4);
+}
+
+:mulhsu rd, rs1, rs2 is opcode=0b0110011 & funct7=1 & funct3=0b010 & rd & rs1 & rs2 {
+	local tmp:8 = sext(rs1)*zext(rs2);
+	rd = tmp(4);
+}
+
+:mulhu rd, rs1, rs2 is opcode=0b0110011 & funct7=1 & funct3=0b011 & rd & rs1 & rs2 {
+	local tmp:8 = zext(rs1)*zext(rs2);
+	rd = tmp(4);
+}
+
+:div rd, rs1, rs2 is opcode=0b0110011 & funct7=1 & funct3=0b100 & rd & rs1 & rs2 {
+	rd = rs1 s/ rs2;
+}
+
+:divu rd, rs1, rs2 is opcode=0b0110011 & funct7=1 & funct3=0b101 & rd & rs1 & rs2 {
+	rd = rs1 / rs2;
+}
+
+:rem rd, rs1, rs2 is opcode=0b0110011 & funct7=1 & funct3=0b110 & rd & rs1 & rs2 {
+	rd = rs1 s% rs2;
+}
+
+:remu rd, rs1, rs2 is opcode=0b0110011 & funct7=1 & funct3=0b111 & rd & rs1 & rs2 {
+	rd = rs1 % rs2;
+}

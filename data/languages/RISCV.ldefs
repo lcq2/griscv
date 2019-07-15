@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- See Relax specification: Ghidra/Framework/SoftwareModeling/data/languages/language_definitions.rxg -->
+
+<language_definitions> 
+   <language processor="RISCV"
+            endian="little"
+            size="32"
+            variant="default"
+            version="1.0"
+            slafile="RISCV.sla"
+            processorspec="RISCV.pspec"
+            id="RISCV:LE:32:default">
+    <description>RISC-V Language Module</description>
+    <compiler name="default" spec="RISCV.cspec" id="default"/>
+  </language> 
+</language_definitions>
