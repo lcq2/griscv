@@ -1,3 +1,8 @@
+# ** DEPRECATED **
+Do not use this plugin, it was an experiment for me to learn Ghidra Sleigh before Ghidra had an official support for RISC-V. I'm not planning to update this anymore.
+
+
+
 # griscv
 RISC-V processor plugin for Ghidra
 
